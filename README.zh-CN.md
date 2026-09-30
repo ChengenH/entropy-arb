@@ -114,6 +114,29 @@ python3 main.py --symbol SNDK --hedge lighter-rh
 可切换为纯日志输出（nohup/systemd 等非终端环境会自动退回纯日志），也可
 设置 `logging.dashboard: false`。
 
+## Ubuntu 后台启动与停止
+
+在服务器项目目录执行以下命令。`bot.sh` 优先使用项目的 `.venv/bin/python`，
+读取现有 `config.yaml` 和 `.env`，无需手动激活虚拟环境。
+
+```bash
+bash bot.sh start     # 默认 SNDK / lighter-rh 实盘，会发送真实订单
+bash bot.sh record    # 仅采集；与 start 二选一
+bash bot.sh status    # 查看进程是否存活
+bash bot.sh logs      # 查看实时日志，Ctrl+C 只退出日志查看
+bash bot.sh stop      # 正常停止，最多等待 60 秒，不会自动平仓
+```
+
+其他交易组合可用 `bash bot.sh start BTC lighter` 指定。切换模式、交易组合或
+应用配置修改时，先 `stop`，确认停止后再启动。首次使用前，先停止原来的前台、
+tmux 或 nohup 实例；脚本不会接管或关闭其他方式启动的进程。
+
+输出追加到 `logs/background.log`，盘口与成交 CSV 仍按配置记录。启动后仍需
+查看日志确认初始化及账户同步成功，`status` 只检查进程存活，不代表交易正常。
+脚本核对 PID、进程启动时间和系统启动标识，避免仅凭过期 PID 停止其他进程；
+停止超时不使用强制终止。后台运行可跨越 SSH 断开或本地电脑睡眠，但不会在
+服务器重启或程序崩溃后自动重启。机器人停止后，已有仓位仍需自行管理。
+
 ## 数据采集与分析
 
 采集器在所有模式下自动运行（`recorder.enabled: true`）：每秒采样一次两边

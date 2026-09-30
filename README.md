@@ -28,6 +28,26 @@ While it runs — even with no credentials and no strategy — it records both
 books to **1-minute CSV bars**, and the bundled analyzer turns that data into
 the three numbers that define the whole strategy.
 
+## Ubuntu background commands
+
+From the project directory, use `bash bot.sh start` for **LIVE SNDK / lighter-rh**,
+or `bash bot.sh record` for collection only. The script prefers `.venv/bin/python`
+and uses the existing `config.yaml` and `.env`.
+
+```bash
+bash bot.sh status    # process status, not trading health
+bash bot.sh logs      # follow logs/background.log; Ctrl+C leaves the bot running
+bash bot.sh stop      # graceful shutdown; does NOT close positions
+```
+
+Use `bash bot.sh start BTC lighter` to select another pair. Stop the previous
+foreground/tmux/nohup instance before first use. The script refuses duplicate
+instances detected in this checkout and does not adopt externally started bots.
+It verifies process identity before stopping and never escalates a shutdown
+timeout to SIGKILL. Check startup and account reconciliation in the log.
+SSH disconnects do not stop the background bot; server reboots or crashes
+require a manual restart. Changes to configuration require stop, then start.
+
 ## The signal
 
 The band is three numbers in `config.yaml`, derived by you from recorded
