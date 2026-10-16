@@ -15,11 +15,17 @@ usage() {
   bash bot.sh start                 后台实盘：SNDK / lighter-rh
   bash bot.sh record                后台仅采集，不下单
   bash bot.sh start SYMBOL HEDGE    指定交易组合
+  bash bot.sh record SYMBOL HEDGE   指定采集组合，不下单
   bash bot.sh status               查看进程状态
   bash bot.sh logs                 跟踪日志，Ctrl+C 只退出日志
   bash bot.sh stop                 正常停止，不会自动平仓
+  bash bot.sh help                 查看帮助
 
-使用项目中的 config.yaml 和 .env，优先使用 .venv/bin/python。
+start/record 可省略 SYMBOL 和 HEDGE，默认 SNDK / lighter-rh。
+HEDGE 支持 lighter、lighter-rh、tradexyz。
+使用项目中的 config.yaml 和 .env；已导出的环境变量优先于 .env。
+Python 查找顺序：.venv/bin/python、venv/bin/python、PATH 中的 python3。
+固定使用 --no-dashboard，日志追加到 logs/background.log。
 SSH 断开后继续运行；服务器重启或程序退出后不会自动重启。
 HELP
 }
